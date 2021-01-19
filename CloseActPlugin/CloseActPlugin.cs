@@ -39,8 +39,8 @@ namespace CloseActPlugin
         private void CombatEnded(bool isImport, CombatToggleEventArgs encounterInfo)
         {
             UpdateText("Cleared encounters at " + DateTime.Now.ToString(CultureInfo.CurrentCulture));
-            MethodInfo mthd = ActGlobals.oFormActMain.GetType().GetMethod("btnClear_Click", BindingFlags.NonPublic | BindingFlags.Instance); 
-            mthd.Invoke(ActGlobals.oFormActMain, new object[] { null, null });
+            ActGlobals.oFormActMain.GetType().GetMethod("btnClear_Click", BindingFlags.NonPublic | BindingFlags.Instance)
+                .Invoke(ActGlobals.oFormActMain, new object[] { null, null }); 
         }
     }
     
