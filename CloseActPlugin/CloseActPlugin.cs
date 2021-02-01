@@ -115,12 +115,27 @@ namespace CloseActPlugin
 
         private void CombatEnded(bool isImport, CombatToggleEventArgs encounterInfo)
         {
-            UpdateText("Cleared encounters at " + DateTime.Now.ToString(CultureInfo.CurrentCulture));
-            ActGlobals.oFormActMain.GetType().GetMethod("btnClear_Click", BindingFlags.NonPublic | BindingFlags.Instance)
-                .Invoke(ActGlobals.oFormActMain, new object[] { null, null }); 
+            new Thread(new ClearWorker(this).Main).Start();
         }
     }
-    
+
+    class ClearWorker
+    {
+        private CloseActPluginMain c;
+        public ClearWorker(CloseActPluginMain c)
+        {
+            this.c = c;
+        }
+        public void Main()
+        {
+            Thread.Sleep(1000);
+            if ((Boolean)(ActGlobals.oFormActMain.GetType().GetField("inCombat", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ActGlobals.oFormActMain))) return;
+            c.UpdateText("Cleared encounters at " + DateTime.Now.ToString(CultureInfo.CurrentCulture));
+            ActGlobals.oFormActMain.GetType().GetMethod("btnClear_Click", BindingFlags.NonPublic | BindingFlags.Instance)
+                .Invoke(ActGlobals.oFormActMain, new object[] { null, null });
+        }
+    }
+
     class CloseWorker
     {
         private CloseActPluginMain c;
